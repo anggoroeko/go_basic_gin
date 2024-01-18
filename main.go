@@ -18,29 +18,62 @@ func main() {
 	})
 	r.GET("/home", GetHome)
 
-	r.GET("/departments", routes.GetDepartment)
-	r.GET("/departments/:id", routes.GetDepartmentById)
-	r.POST("/departments", routes.PostDepartment)
-	r.PUT("/departments/:id", routes.PutDepartment)
-	r.DELETE("/departments/:id", routes.DeleteDepartment)
+	route := r.Group("/")
+	{
+		user := route.Group("/user")
+		{
+			user.POST("/register", routes.RegisterUser)
+			user.POST("/login", routes.GenerateToken)
+		}
 
-	r.GET("/positions", routes.GetPositions)
-	r.GET("/positions/:id", routes.GetPositionsById)
-	r.POST("/positions", routes.PostPositions)
-	r.PUT("/positions/:id", routes.PutPositions)
-	r.DELETE("/positions/:id", routes.DeletePositions)
+		department := route.Group("departments")
+		{
+			//:: MASTER DEPARTMENT
+			department.GET("/", routes.GetDepartment)
+			department.GET("/:id", routes.GetDepartmentById)
+			department.POST("/", routes.PostDepartment)
+			department.PUT("/:id", routes.PutDepartment)
+			department.DELETE("/:id", routes.DeleteDepartment)
+		}
 
-	r.GET("/inventory", routes.GetInventory)
-	r.GET("/inventory/:id", routes.GetInventoryById)
-	r.POST("/inventory", routes.PostInventory)
-	r.PUT("/inventory/:id", routes.PutInventory)
-	r.DELETE("/inventory/:id", routes.DeleteInventory)
+		position := route.Group("positions")
+		{
+			//:: MASTER POSITIONS
+			position.GET("/", routes.GetPositions)
+			position.GET("/:id", routes.GetPositionsById)
+			position.POST("", routes.PostPositions)
+			position.PUT("/:id", routes.PutPositions)
+			position.DELETE("/:id", routes.DeletePositions)
+		}
 
-	r.GET("/employees", routes.GetEmployees)
-	r.GET("/employees/:id", routes.GetEmployeeById)
-	r.POST("/employees", routes.PostEmployees)
-	r.PUT("/employees/:id", routes.PutEmployees)
-	r.DELETE("/employees/:id", routes.DeleteEmployees)
+		inventory := route.Group("inventory")
+		{
+			//:: MASTER INVENTORY
+			inventory.GET("", routes.GetInventory)
+			inventory.GET("/:id", routes.GetInventoryById)
+			inventory.POST("/", routes.PostInventory)
+			inventory.PUT("/:id", routes.PutInventory)
+			inventory.DELETE("/:id", routes.DeleteInventory)
+		}
+
+		employee := route.Group("employees")
+		{
+			//:: MASTER EMPLOYEE
+			employee.GET("/", routes.GetEmployees)
+			employee.GET("/:id", routes.GetEmployeeById)
+			employee.POST("/", routes.PostEmployees)
+			employee.PUT("/:id", routes.PutEmployees)
+			employee.DELETE("/:id", routes.DeleteEmployees)
+		}
+
+		rental := route.Group("rental")
+		{
+			//:: RENTAL
+			rental.GET("/", routes.GetRental)
+			rental.POST("/employee", routes.RentalByEmployeeID)
+			rental.GET("/inventory/:id", routes.GetRentalByInventoryID)
+		}
+	}
 
 	r.Run(":8010") //listen and serve on 0.0.0.0:8080
 }

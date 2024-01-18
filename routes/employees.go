@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm/clause"
 )
 
 func GetEmployees(c *gin.Context) {
@@ -18,7 +19,8 @@ func GetEmployees(c *gin.Context) {
 	// config.DB.Find(&departments)
 
 	//:: WITH RELAION
-	config.DB.Preload("Position").Find(&employees)
+	// config.DB.Preload("Position").Find(&employees)
+	config.DB.Preload(clause.Associations).Find(&employees)
 
 	getEmployeeResponse := []models.GetEmployeeResponse{}
 

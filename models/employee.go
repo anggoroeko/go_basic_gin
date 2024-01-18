@@ -9,7 +9,8 @@ type Employee struct {
 	Email      string `json:"email"`
 	PositionID uint   `json:"position_id"`
 	// Position   PositionResponse `json:"position"`
-	Position Position `json:"position"`
+	Position    Position `json:"position"`
+	Inventories []EmployeeInventory
 }
 
 type EmployeeResponse struct {
