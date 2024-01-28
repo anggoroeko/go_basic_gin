@@ -6,15 +6,40 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 func RegisterUser(c *gin.Context) {
+	validate := validator.New()
 	var user models.User
 
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Bad Request",
 			"error":   err.Error(),
+		})
+
+		c.Abort()
+		return
+	}
+
+	if errs := validate.Struct(&user); errs != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Bad Request",
+			"error":   errs.Error(),
+		})
+
+		c.Abort()
+		return
+	}
+
+	//:: CHECK EMAIL
+	checkEmail := config.DB.Where("email = ?", user.Email).First(&user)
+
+	if checkEmail.Error == nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Email has already exist",
+			"error":   checkEmail.Error,
 		})
 
 		c.Abort()

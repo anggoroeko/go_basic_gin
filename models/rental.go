@@ -8,11 +8,17 @@ import (
 
 type EmployeeInventory struct {
 	gorm.Model
-	EmployeeID  uint      `json:"employee_id"`
-	Employee    Employee  `gorm:"foreignKey:EmployeeID; reference:ID"`
-	InventoryID uint      `json:"inventory_id"`
-	Inventory   Inventory `gorm:"foreignKey:InventoryID; reference:ID"`
-	Description string    `json:"description"`
+	EmployeeID uint `json:"employee_id"`
+	//:: BISA DENGAN CARA MANUAL MENDEFINISIKAN FK DAN PK NYA
+	Employee  Employee  `gorm:"foreignKey:EmployeeID; reference:ID"`
+	Inventory Inventory `gorm:"foreignKey:InventoryID; reference:ID"`
+
+	//:: BISA DENGAN CARA OTOMATIS MENDEFINISIKAN FK DAN PK NYA
+	// Employee  Employee
+	// Inventory Inventory
+
+	InventoryID uint   `json:"inventory_id"`
+	Description string `json:"description"`
 }
 
 type ResponseGetRental struct {

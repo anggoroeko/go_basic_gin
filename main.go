@@ -2,6 +2,7 @@ package main
 
 import (
 	"golang_basic_gin_sept_2023/config"
+	"golang_basic_gin_sept_2023/middlewares"
 	"golang_basic_gin_sept_2023/routes"
 
 	"github.com/gin-gonic/gin"
@@ -26,7 +27,7 @@ func main() {
 			user.POST("/login", routes.GenerateToken)
 		}
 
-		department := route.Group("departments")
+		department := route.Group("departments").Use(middlewares.IsAdmin())
 		{
 			//:: MASTER DEPARTMENT
 			department.GET("/", routes.GetDepartment)
@@ -36,7 +37,7 @@ func main() {
 			department.DELETE("/:id", routes.DeleteDepartment)
 		}
 
-		position := route.Group("positions")
+		position := route.Group("positions").Use(middlewares.Auth())
 		{
 			//:: MASTER POSITIONS
 			position.GET("/", routes.GetPositions)
